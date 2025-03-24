@@ -97,7 +97,6 @@ signature_headers = [
     "x-request-accept-encoding",
     "x-request-accept-language",
     "x-request-upgrade-insecure-requests",
-    "x-request-whitelist"
 ]
 signature_delimiter = "|"
 cookie_name_template = "antibot_cookie_{}"
@@ -148,7 +147,7 @@ server {
         proxy_set_header X-Request-Accept-Encoding "$http_accept_encoding";
         proxy_set_header X-Request-Accept-Language "$http_accept_language";
         proxy_set_header X-Request-Upgrade-Insecure-Requests "$http_x_upgrade_insecure_requests";
-        proxy_set_header X-Request-Whitelist $search_engine;
+        proxy_set_header X-Request-Allow $search_engine;
 
         proxy_pass http://your_backend;
     }
@@ -177,6 +176,8 @@ server {
     }
 }
 ```
+
+The `X-Request-Allow` can be used to exclude some requests from the verification process. If it is set to 1, the verification succeeds without any checks.
 
 ---
 

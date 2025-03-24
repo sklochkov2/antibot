@@ -17,6 +17,18 @@ pub async fn verify_handler(req: &Request<Incoming>, config: &AppParams) -> Resp
     let signature_hash = crate::blake3_hash(&req_signature);
     let cookie_name = config.cookie_name_template.replace("{}", &signature_hash);
 
+    let whitelist = match req.headers().get("x-request-allow") {
+        Some(h) => h == "1",
+        None => false,
+    };
+
+    if whitelist {
+        return Response::builder()
+            .status(StatusCode::OK)
+            .body(Full::new(Bytes::new()))
+            .unwrap();
+    }
+
     // Extract cookie from request headers
     let cookie_header = req.headers().get(COOKIE).and_then(|v| v.to_str().ok());
 
