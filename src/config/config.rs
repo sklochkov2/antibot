@@ -21,6 +21,8 @@ impl Config {
 
         let mut config: Config = toml::from_str(&config_str).expect("Invalid configuration format");
 
+        println!("Loading javascript challenge page");
+
         config.app.js_challenge_template =
             fs::read_to_string(&config.app.js_challenge_template_path)
                 .expect("Failed to load JS challenge template");

@@ -13,7 +13,6 @@ use hyper::body::Incoming;
 use hyper::Response;
 use hyper_util::rt::TokioIo;
 use std::env;
-use std::fs;
 use std::net::SocketAddr;
 use std::os::unix::net::UnixListener as StdUnixListener;
 use tokio::net::{TcpListener, UnixListener};
@@ -44,8 +43,7 @@ async fn main() -> Result<()> {
         Err(_) => "./config.toml".to_string(),
     };
 
-    let config_text = fs::read_to_string(config_path)?;
-    let config: Config = toml::from_str(&config_text)?;
+    let config: Config = Config::from_file(&config_path);
 
     match config.listen {
         Listen::Tcp { addr } => {
