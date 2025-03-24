@@ -4,6 +4,28 @@ A high-performance HTTP-based antibot verification server implemented in Rust us
 
 ---
 
+## Goals
+
+This antibot application is meant to provide protection from automated requests while permitting browsers to access web resources. It is built to meet the following goals.
+
+- Being seamless for the end users, avoiding any sort of delays or captchas.
+- Not using any IP address denylists. Say, if a client's computer is infected by a virus, the antibot application will permit the client's requests while denying the virus.
+- High performance proven by load testing, both in terms of throughput and latency.
+- Absence of any internal or external dependencies. All the antibot needs to run is its configuration file. It does not require access to any databases or use of any third party services.
+
+---
+
+## Mode of operation
+
+The antibot application uses cryptographically sound client-side challenges in order to verify that the request is being made by a browser as opposed to an automatic scraper bot.
+When a new, unverified client makes a request, they are being served a static page which requires the client to decrypt a one-time security token using a Javascript AES implementation.
+If the challenge has been passed successfully, the client will be issued a cookie valid only for a particular signature (which constitutes a combination of parameters identifying the HTTP client).
+Using the same cookie from another HTTP client will not lead to access being granted.
+
+The way signature is computed is defined in the configuration file. Nginx can pass various information to the antibot in additional request headers.
+
+---
+
 ## 📌 Application Overview
 
 The antibot server employs a multi-stage verification strategy to differentiate genuine browser clients from automated bots or scripts. It consists of several endpoints that:
