@@ -1,0 +1,26 @@
+[listen]
+type = "Tcp"
+addr = "127.0.0.1:8080"
+# or for UNIX socket:
+# type = "Unix"
+# path = "/tmp/my_socket.sock"
+
+[app]
+security_tokens = ["test1"]
+signature_delimiter = "#_#"
+signature_headers = [
+  'x-request-scheme',
+  'x-request-ip',
+  'x-request-host',
+  'x-request-user-agent',
+  'x-request-ciphers',
+  'x-request-curves',
+  'x-request-ssl-protocol',
+  'x-request-accept-language',
+  'x-request-upgrade-insecure-requests'
+]
+
+cookie_name_template = "CH{}"
+cookie_max_age_seconds = 3600
+redirect_token_max_age_seconds = 60
+js_challenge_template_path = "src/templates/js_challenge.html"

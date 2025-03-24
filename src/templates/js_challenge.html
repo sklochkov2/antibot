@@ -1,0 +1,26 @@
+<html>
+<head><title>Verification</title></head>
+<body>
+<script>
+    const encryptedToken = "{{encrypted_token}}";
+    const key = "{{key}}";
+    const iv = "{{iv}}";
+    const redirectUri = "{{encoded_uri}}";
+
+    async function decryptAndRedirect() {
+        const encrypted = Uint8Array.from(atob(encryptedToken), c => c.charCodeAt(0));
+        const rawKey = Uint8Array.from(atob(key), c => c.charCodeAt(0));
+        const rawIv = Uint8Array.from(atob(iv), c => c.charCodeAt(0));
+
+        const cryptoKey = await crypto.subtle.importKey("raw", rawKey, "AES-GCM", false, ["decrypt"]);
+        const decrypted = await crypto.subtle.decrypt({name: "AES-GCM", iv: rawIv}, cryptoKey, encrypted);
+
+        const token = new TextDecoder().decode(decrypted);
+
+        window.location.href = `/.chk/redirect/${encodeURIComponent(token)}?redirect_uri=${redirectUri}`;
+    }
+
+    decryptAndRedirect().catch(() => document.body.innerHTML = "Verification failed.");
+</script>
+</body>
+</html>
